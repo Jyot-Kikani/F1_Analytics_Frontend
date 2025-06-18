@@ -1,95 +1,122 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+
+import { useEffect, useState } from "react";
+import Dropdown from "../components/Dropdown";
+import LapTimeChart from "../components/LapTimeChart";
+import DriverCheckboxList from "../components/DriverCheckboxList";
+
+// Define the DriverInfo type to match the backend
+interface DriverInfo {
+  abbreviation: string;
+  full_name: string;
+  team: string;
+  team_color: string;
+  headshot_url: string | null;
+}
 
 export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [year, setYear] = useState("");
+  const [race, setRace] = useState("");
+  const [session, setSession] = useState("");
+  const [selectedDrivers, setSelectedDrivers] = useState<string[]>([]);
+  const [lapData, setLapData] = useState<Record<string, any[]>>({});
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+  const [years, setYears] = useState<string[]>([]);
+  const [races, setRaces] = useState<string[]>([]);
+  const [sessions, setSessions] = useState<string[]>([]);
+  const [drivers, setDrivers] = useState<DriverInfo[]>([]);
+
+  // Replace with your backend URL
+  const API = "http://localhost:8000";
+
+  useEffect(() => {
+    fetch(`${API}/api/years`)
+      .then((res) => res.json())
+      .then(setYears);
+  }, []);
+
+  useEffect(() => {
+    if (year) {
+      fetch(`${API}/api/races/${year}`)
+        .then((res) => res.json())
+        .then(setRaces);
+      setRace("");
+      setSessions([]);
+      setDrivers([]);
+    }
+  }, [year]);
+
+  useEffect(() => {
+    if (year && race) {
+      fetch(`${API}/api/sessions/${year}/${encodeURIComponent(race)}`)
+        .then((res) => res.json())
+        .then(setSessions);
+      setSession("");
+      setDrivers([]);
+    }
+  }, [race, year]);
+
+  useEffect(() => {
+    if (year && race && session) {
+      fetch(`${API}/api/drivers/${year}/${encodeURIComponent(race)}/${session}`)
+        .then((res) => res.json())
+        .then((data) => {
+          console.log("Drivers data received:", data);
+          setDrivers(data);
+        });
+      setSelectedDrivers([]);
+    }
+  }, [session, race, year]);
+
+  useEffect(() => {
+    if (selectedDrivers.length > 0 && year && race && session) {
+      const driverQuery = selectedDrivers.join(",");
+
+      fetch(
+        `${API}/api/laptimes/${year}/${encodeURIComponent(
+          race
+        )}/${session}?drivers=${driverQuery}`
+      )
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error(`HTTP error ${res.status}`);
+          }
+          return res.json();
+        })
+        .then((data) => {
+          console.log("Lap data received:", data);
+          setLapData(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching lap times:", error);
+        });
+    } else {
+      setLapData({});
+    }
+  }, [selectedDrivers, year, race, session]);
+
+  return (
+    <main className="p-8 bg-black text-white min-h-screen">
+      <h1 className="text-3xl font-bold mb-6">F1 Lap Time Analyzer</h1>
+
+      <Dropdown label="Year" options={years} value={year} onChange={setYear} />
+      <Dropdown label="Race" options={races} value={race} onChange={setRace} />
+      <Dropdown
+        label="Session"
+        options={sessions}
+        value={session}
+        onChange={setSession}
+      />
+
+      {drivers.length > 0 && (
+        <DriverCheckboxList
+          drivers={drivers}
+          selectedDrivers={selectedDrivers}
+          onChange={setSelectedDrivers}
+        />
+      )}
+
+      {Object.keys(lapData).length > 0 && <LapTimeChart data={lapData} />}
+    </main>
   );
 }
