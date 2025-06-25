@@ -96,7 +96,7 @@ export default function Home() {
   }, [selectedDrivers, year, race, session]);
 
   return (
-    <main className="p-8 bg-black text-white min-h-screen">
+    <main className="py-12 px-28 min-h-screen">
       <h1 className="text-3xl font-bold mb-6">F1 Lap Time Analyzer</h1>
 
       <Dropdown label="Year" options={years} value={year} onChange={setYear} />
@@ -107,7 +107,6 @@ export default function Home() {
         value={session}
         onChange={setSession}
       />
-
       {drivers.length > 0 && (
         <DriverCheckboxList
           drivers={drivers}

@@ -9,10 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@radix-ui/react-select": "^2.2.5",
     "@tailwindcss/postcss": "^4.1.10",
     "chart.js": "^4.5.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "framer-motion": "^12.18.1",
     "lucide-react": "^0.517.0",
     "next": "15.3.3",
     "postcss": "^8.5.5",

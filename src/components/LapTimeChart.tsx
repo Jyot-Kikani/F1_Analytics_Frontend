@@ -198,14 +198,14 @@ export default function LapTimeChart({ data }: LapTimeChartProps) {
             onChange={() => setHideOutliers(!hideOutliers)}
             className="mr-2 h-5 w-5"
           />
-          <label htmlFor="hide-outliers" className="text-white text-sm font-medium">
+          <label htmlFor="hide-outliers" className="text-sm font-medium">
             Hide Outliers (Pit Stops & Anomalies)
           </label>
         </div>
         
         {hideOutliers && (
-          <div className="ml-4 text-sm text-gray-400">
-            Using 1.5 × IQR method to detect outliers
+          <div className="ml-4 text-sm">
+            Using 1.5 x IQR method to detect outliers
           </div>
         )}
       </div>

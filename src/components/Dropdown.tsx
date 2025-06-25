@@ -1,6 +1,15 @@
 'use client';
 
 import React from 'react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  SelectGroup,
+  SelectLabel,
+} from "@/components/ui/select"
 
 type Props = {
   label: string;
@@ -12,17 +21,19 @@ type Props = {
 export default function Dropdown({ label, options, value, onChange }: Props) {
   return (
     <div className="mb-4">
-      <label className="block mb-2 text-sm font-medium">{label}</label>
-      <select
-        className="w-full p-2 rounded bg-gray-800 text-white"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-      >
-        <option value="">Select {label}</option>
-        {options.map((opt) => (
-          <option key={opt} value={opt}>{opt}</option>
-        ))}
-      </select>
+      <Select value={value} onValueChange={onChange}>
+        <SelectTrigger>
+          <SelectValue placeholder={`Select ${label}`} />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectLabel>Select {label}</SelectLabel>
+            {options.map((opt) => (
+              <SelectItem key={opt} value={opt}>{opt}</SelectItem>
+            ))}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
     </div>
   );
 }
