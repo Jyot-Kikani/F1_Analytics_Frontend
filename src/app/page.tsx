@@ -14,12 +14,18 @@ interface DriverInfo {
   headshot_url: string | null;
 }
 
+interface LapTimeData {
+  lap_num: number;
+  time: number;
+}
+
 export default function Home() {
   const [year, setYear] = useState("");
   const [race, setRace] = useState("");
   const [session, setSession] = useState("");
   const [selectedDrivers, setSelectedDrivers] = useState<string[]>([]);
-  const [lapData, setLapData] = useState<Record<string, any[]>>({});
+
+  const [lapData, setLapData] = useState<Record<string, LapTimeData[]>>({});
 
   const [years, setYears] = useState<string[]>([]);
   const [races, setRaces] = useState<string[]>([]);
@@ -83,7 +89,7 @@ export default function Home() {
           }
           return res.json();
         })
-        .then((data) => {
+        .then((data: Record<string, LapTimeData[]>) => {
           console.log("Lap data received:", data);
           setLapData(data);
         })
