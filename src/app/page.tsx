@@ -32,7 +32,8 @@ export default function Home() {
   const [sessions, setSessions] = useState<string[]>([]);
   const [drivers, setDrivers] = useState<DriverInfo[]>([]);
 
-  const API = "https://f1-analytics-backend.onrender.com";
+  // const API = "https://f1-analytics-backend.onrender.com";
+  const API = "http://localhost:8000"; // Uncomment for local development
 
   useEffect(() => {
     fetch(`${API}/api/years`)
