@@ -34,7 +34,7 @@ export default function Navbar() {
       {/* Mobile Menu */}
       {isOpen && (
         <div className="md:hidden px-4 pb-4 space-y-2">
-          <NavLinks mobile />
+          <NavLinks />
           <ThemeToggle />
         </div>
       )}
@@ -42,7 +42,7 @@ export default function Navbar() {
   );
 }
 
-function NavLinks({ mobile = false }: { mobile?: boolean }) {
+function NavLinks() {
   const baseClass =
     "block px-4 py-2 rounded-md text-sm font-medium transition-colors";
   const linkClass = `${baseClass} text-muted-foreground hover:text-primary`;
