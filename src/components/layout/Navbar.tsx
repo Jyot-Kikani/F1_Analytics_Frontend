@@ -9,7 +9,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="bg-background/20 text-foreground shadow-sm transition-colors duration-300 rounded-full my-5 backdrop-blur-[10px] z-50 fixed left-1/2 transform -translate-x-1/2 w-[80%]">
+    <nav className="bg-background/20 text-foreground shadow-sm transition-colors duration-300 rounded-full my-5 backdrop-blur-[10px] z-50 fixed top-0 left-1/2 transform -translate-x-1/2 w-[80%]">
       <div className="container mx-auto px-8 py-3 flex justify-between items-center">
         <Link href="/" className="text-xl font-semibold tracking-tight">
           F1 Analytics
