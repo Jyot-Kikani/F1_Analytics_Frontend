@@ -25,7 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="no-scrollbar">
-      <body className={`${geistSans.variable} ${geistMono.variable} pt-27 bg-[url('/sf23.jpg')] w-full bg-[length:100%_auto]`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} pt-27 w-full bg-[length:100%_auto]`}>
         <Navbar />
         {children}
       </body>
